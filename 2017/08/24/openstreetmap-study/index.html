@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>openstreetmap数据整理与研究 | 肖彬的数据分析博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Map AreaLas Vegas, Nevada, USA 拉斯维加斯是美国的赌城，娱乐之都，早就听说过，也非常想去，所以做项目时就想为此地做一下。 一、地图遇到的问题发现有以下问题：  街道名称缩写、不正确； 不正确的邮政编码；  导入必要的库，生成原文件10%样本的文件sample.osm;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openstreetmap数据整理与研究">
+<meta property="og:url" content="http://yoursite.com/2017/08/24/openstreetmap-study/index.html">
+<meta property="og:site_name" content="肖彬的数据分析博客">
+<meta property="og:description" content="Map AreaLas Vegas, Nevada, USA 拉斯维加斯是美国的赌城，娱乐之都，早就听说过，也非常想去，所以做项目时就想为此地做一下。 一、地图遇到的问题发现有以下问题：  街道名称缩写、不正确； 不正确的邮政编码；  导入必要的库，生成原文件10%样本的文件sample.osm;">
+<meta property="og:updated_time" content="2017-08-24T10:07:58.977Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="openstreetmap数据整理与研究">
+<meta name="twitter:description" content="Map AreaLas Vegas, Nevada, USA 拉斯维加斯是美国的赌城，娱乐之都，早就听说过，也非常想去，所以做项目时就想为此地做一下。 一、地图遇到的问题发现有以下问题：  街道名称缩写、不正确； 不正确的邮政编码；  导入必要的库，生成原文件10%样本的文件sample.osm;">
+  
+    <link rel="alternate" href="/atom.xml" title="肖彬的数据分析博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">肖彬的数据分析博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">一起探索数据的世界</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="Flux RSS"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Rechercher"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-openstreetmap-study" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/08/24/openstreetmap-study/" class="article-date">
+  <time datetime="2017-08-24T10:04:57.000Z" itemprop="datePublished">2017-08-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      openstreetmap数据整理与研究
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Map-Area"><a href="#Map-Area" class="headerlink" title="Map Area"></a>Map Area</h2><p><a href="https://mapzen.com/data/metro-extracts/metro/las-vegas_nevada" target="_blank" rel="external">Las Vegas, Nevada, USA</a></p>
+<p>拉斯维加斯是美国的赌城，娱乐之都，早就听说过，也非常想去，所以做项目时就想为此地做一下。</p>
+<h2 id="一、地图遇到的问题"><a href="#一、地图遇到的问题" class="headerlink" title="一、地图遇到的问题"></a>一、地图遇到的问题</h2><p>发现有以下问题：</p>
+<ol>
+<li><strong>街道名称缩写、不正确；</strong></li>
+<li><strong>不正确的邮政编码；</strong></li>
+</ol>
+<p>导入必要的库，生成原文件10%样本的文件sample.osm;</p>
+<a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#导入必要的库</span></div><div class="line"><span class="keyword">import</span> xml.etree.cElementTree <span class="keyword">as</span> ET</div><div class="line"><span class="keyword">import</span> pprint</div><div class="line"><span class="keyword">import</span> re</div><div class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</div><div class="line"><span class="keyword">import</span> csv</div><div class="line"><span class="keyword">import</span> cerberus</div><div class="line"><span class="keyword">import</span> schema</div><div class="line"><span class="keyword">import</span> codecs</div><div class="line"><span class="keyword">import</span> string</div><div class="line"><span class="keyword">import</span> schema</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- coding: utf-8 -*-</span></div><div class="line"></div><div class="line">OSM_FILE = <span class="string">"las-vegas_nevada.osm"</span>  <span class="comment"># Replace this with your osm file</span></div><div class="line">SAMPLE_FILE = <span class="string">"sample.osm"</span></div><div class="line"></div><div class="line">k = <span class="number">10</span> <span class="comment"># Parameter: take every k-th top level element</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_element</span><span class="params">(osm_file, tags=<span class="params">(<span class="string">'node'</span>, <span class="string">'way'</span>, <span class="string">'relation'</span>)</span>)</span>:</span></div><div class="line">    <span class="string">"""Yield element if it is the right type of tag</span></div><div class="line"></div><div class="line">    Reference:</div><div class="line">    http://stackoverflow.com/questions/3095434/inserting-newlines-in-xml-file-generated-via-xml-etree-elementtree-in-python</div><div class="line">    """</div><div class="line">    context = iter(ET.iterparse(osm_file, events=(<span class="string">'start'</span>, <span class="string">'end'</span>)))</div><div class="line">    _, root = next(context)</div><div class="line">    <span class="keyword">for</span> event, elem <span class="keyword">in</span> context:</div><div class="line">        <span class="keyword">if</span> event == <span class="string">'end'</span> <span class="keyword">and</span> elem.tag <span class="keyword">in</span> tags:</div><div class="line">            <span class="keyword">yield</span> elem</div><div class="line">            root.clear()</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">with</span> open(SAMPLE_FILE, <span class="string">'wb'</span>) <span class="keyword">as</span> output:</div><div class="line">    output.write(<span class="string">'&lt;?xml version="1.0" encoding="UTF-8"?&gt;\n'</span>)</div><div class="line">    output.write(<span class="string">'&lt;osm&gt;\n  '</span>)</div><div class="line"></div><div class="line">    <span class="comment"># Write every kth top level element</span></div><div class="line">    <span class="keyword">for</span> i, element <span class="keyword">in</span> enumerate(get_element(OSM_FILE)):</div><div class="line">        <span class="keyword">if</span> i % k == <span class="number">0</span>:</div><div class="line">            output.write(ET.tostring(element, encoding=<span class="string">'utf-8'</span>))</div><div class="line"></div><div class="line">    output.write(<span class="string">'&lt;/osm&gt;'</span>)</div></pre></td></tr></table></figure>
+<h5 id="看数据中有多少标签"><a href="#看数据中有多少标签" class="headerlink" title="看数据中有多少标签"></a>看数据中有多少标签</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">file_name = <span class="string">'las-vegas_nevada.osm'</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">count_tags</span><span class="params">(filename)</span>:</span></div><div class="line">    tags = &#123;&#125;</div><div class="line">    <span class="keyword">for</span> _,elem <span class="keyword">in</span> ET.iterparse(filename):</div><div class="line">        <span class="keyword">if</span> elem.tag <span class="keyword">in</span> tags:</div><div class="line">            tags[elem.tag] +=<span class="number">1</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            tags[elem.tag] =<span class="number">1</span></div><div class="line">    <span class="keyword">return</span> tags</div><div class="line">        </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">()</span>:</span></div><div class="line">    tags = count_tags(<span class="string">'las-vegas_nevada.osm'</span>)</div><div class="line">    pprint.pprint(tags)</div><div class="line">    </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    test()</div></pre></td></tr></table></figure>
+<pre><code>{&apos;bounds&apos;: 1,
+ &apos;member&apos;: 4333,
+ &apos;nd&apos;: 1241838,
+ &apos;node&apos;: 1048101,
+ &apos;osm&apos;: 1,
+ &apos;relation&apos;: 556,
+ &apos;tag&apos;: 489437,
+ &apos;way&apos;: 112116}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">lower = re.compile(<span class="string">r'^([a-z]|_)*$'</span>)</div><div class="line">lower_colon = re.compile(<span class="string">r'^([a-z]|_)*:([a-z]|_)*$'</span>)</div><div class="line">problemchars = re.compile(<span class="string">r'[=\+/&amp;&lt;&gt;;\'" \?%#$@\,\.\t\r\n]'</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">key_type</span><span class="params">(element, keys)</span>:</span></div><div class="line">    <span class="keyword">if</span> element.tag == <span class="string">"tag"</span>:</div><div class="line">        <span class="keyword">for</span> tag <span class="keyword">in</span> element.iter(<span class="string">"tag"</span>):</div><div class="line">            <span class="keyword">if</span> lower.search(tag.attrib[<span class="string">'k'</span>]):</div><div class="line">                keys[<span class="string">'lower'</span>] +=<span class="number">1</span></div><div class="line">            <span class="keyword">elif</span> lower_colon.search(tag.attrib[<span class="string">'k'</span>]):</div><div class="line">                keys[<span class="string">'lower_colon'</span>] += <span class="number">1</span></div><div class="line">            <span class="keyword">elif</span> problemchars.search(tag.attrib[<span class="string">'k'</span>]):</div><div class="line">                keys[<span class="string">"problemchars"</span>] += <span class="number">1</span></div><div class="line">            <span class="keyword">else</span> :</div><div class="line">                keys[<span class="string">"other"</span>] += <span class="number">1</span></div><div class="line">    <span class="keyword">return</span> keys</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_map</span><span class="params">(filename)</span>:</span></div><div class="line">    keys = &#123;<span class="string">"lower"</span>: <span class="number">0</span>, <span class="string">"lower_colon"</span>: <span class="number">0</span>, <span class="string">"problemchars"</span>: <span class="number">0</span>, <span class="string">"other"</span>: <span class="number">0</span>&#125;</div><div class="line">    <span class="keyword">for</span> _, element <span class="keyword">in</span> ET.iterparse(filename):</div><div class="line">        keys = key_type(element, keys)</div><div class="line">    <span class="keyword">return</span> keys</div><div class="line">    </div><div class="line">keys = process_map(file_name)</div><div class="line">pprint.pprint(keys)</div></pre></td></tr></table></figure>
+<pre><code>{&apos;lower&apos;: 316935, &apos;lower_colon&apos;: 165174, &apos;other&apos;: 7327, &apos;problemchars&apos;: 1}
+</code></pre><p>我们编写了两个函数key_type（）和process_map（），这两个函数使用正则表达式匹配来分离我们的键值。<br>我们将我们的数据集分为4组：lower，lower_colon，problemchars，other。</p>
+<h3 id="1、街道名称缩写、不正确"><a href="#1、街道名称缩写、不正确" class="headerlink" title="1、街道名称缩写、不正确"></a>1、街道名称缩写、不正确</h3><p>一些街道名称被缩写，例如“Marco St”，更新为全拼；</p>
+<p>一些街道名称不正确，例如“S Maryland Parkway Suite A-5-262”，进行了更正；</p>
+<p>首先打印所有的街道名称，查看全部类型的街道名称</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">street_type_re = re.compile(<span class="string">r'\b\S+\.?$'</span>, re.IGNORECASE) </div><div class="line"></div><div class="line">expected = [<span class="string">"Avenue"</span>, <span class="string">"Commons"</span>, <span class="string">"Court"</span>, <span class="string">"Drive"</span>, <span class="string">"Lane"</span>, <span class="string">"Parkway"</span>, </div><div class="line">                         <span class="string">"Place"</span>, <span class="string">"Road"</span>, <span class="string">"Square"</span>, <span class="string">"Street"</span>, <span class="string">"Trail"</span>]</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">audit_street_type</span><span class="params">(street_types, street_name)</span>:</span>     </div><div class="line">    m = street_type_re.search(street_name)</div><div class="line">    <span class="keyword">if</span> m:</div><div class="line">        street_type = m.group()</div><div class="line">        <span class="keyword">if</span> street_type <span class="keyword">not</span> <span class="keyword">in</span> expected:</div><div class="line">            street_types[street_type].add(street_name) </div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_street_name</span><span class="params">(elem)</span>:</span>         </div><div class="line">    <span class="keyword">return</span> (elem.attrib[<span class="string">'k'</span>] == <span class="string">"addr:street"</span>) <span class="comment">#Function to check value to be a street name </span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">audit</span><span class="params">(osmfile)</span>:</span></div><div class="line">    osm_file = open(osmfile, <span class="string">"r"</span>)</div><div class="line">    street_types = defaultdict(set)</div><div class="line">    <span class="keyword">for</span> event, elem <span class="keyword">in</span> ET.iterparse(osm_file, events=(<span class="string">"start"</span>,)):</div><div class="line"></div><div class="line">        <span class="keyword">if</span> elem.tag == <span class="string">"node"</span> <span class="keyword">or</span> elem.tag == <span class="string">"way"</span>:</div><div class="line">            <span class="keyword">for</span> tag <span class="keyword">in</span> elem.iter(<span class="string">"tag"</span>):</div><div class="line">                <span class="keyword">if</span> is_street_name(tag):</div><div class="line">                    audit_street_type(street_types, tag.attrib[<span class="string">'v'</span>])</div><div class="line">    <span class="keyword">return</span> street_types</div><div class="line"></div><div class="line">sort_street_types = audit(file_name)</div><div class="line">pprint.pprint(dict(sort_street_types))</div></pre></td></tr></table></figure>
+<pre><code>{&apos;1&apos;: set([&apos;Spanish Ridge Ave., Suite 1&apos;, &apos;West Gary Avenue #1&apos;]),
+ &apos;10&apos;: set([&apos;S. Valley View Blvd. Ste 10&apos;]),
+ &apos;100&apos;: set([&apos;S Eastern Ave #100&apos;]),
+ &apos;103&apos;: set([&apos;South Pecos Road Suite 103&apos;]),
+ &apos;106&apos;: set([&apos;S Grand Canyon Dr #106&apos;]),
+ &apos;107&apos;: set([&apos;S Decatur Blvd #107&apos;]),
+ &apos;11&apos;: set([&apos;Chandler Ave #11&apos;]),
+ &apos;110&apos;: set([&apos;South Jones Boulevard Suite 110&apos;]),
+ &apos;111-559&apos;: set([&apos;8465 W Sahara Avenue Suite 111-559&apos;]),
+ &apos;115&apos;: set([&apos;North Hualapai Way #115&apos;]),
+ &apos;1170&apos;: set([&apos;Fremont Street Ste. 1170&apos;]),
+ &apos;120&apos;: set([&apos;E SILVERADO RANCH BLVD Suite 120&apos;, &apos;Silverado Ranch Blvd #120&apos;]),
+ &apos;15&apos;: set([&apos;E Sahara Blvd #15&apos;]),
+ &apos;150&apos;: set([&apos;West Horizon Ridge Parkway, STE 150&apos;]),
+ &apos;16&apos;: set([&apos;Polaris Ave #16&apos;]),
+ &apos;170&apos;: set([&apos;Sky Pointe Dr #170&apos;]),
+ &apos;207&apos;: set([&apos;E Sahara Ave #207&apos;]),
+ &apos;275&apos;: set([&apos;Camino Al Norte #275&apos;]),
+ &apos;2D&apos;: set([&apos;Spring Mountain Rd #2D&apos;]),
+ &apos;3230&apos;: set([&apos;W Sahara Ave #3230&apos;]),
+ &apos;500&apos;: set([&apos;Howard Hughes Parkway, Suite 500&apos;]),
+ &apos;705&apos;: set([&apos;West Ali Baba Lane #705&apos;]),
+ &apos;790&apos;: set([&apos;Howard Hughes Pkwy #790&apos;]),
+ &apos;93&apos;: set([&apos;Highway 93&apos;]),
+ &apos;A&apos;: set([&apos;E Tropicana Ave #A&apos;, &apos;West Post Road A&apos;]),
+ &apos;A-5-262&apos;: set([&apos;S Maryland Parkway Suite A-5-262&apos;]),
+ &apos;AVE&apos;: set([&apos;W PACIFIC AVE&apos;]),
+ &apos;Alicante&apos;: set([&apos;Via Alicante&apos;]),
+ &apos;Apache&apos;: set([&apos;S Fort Apache&apos;, &apos;S. Fort Apache&apos;]),
+ &apos;Ave&apos;: set([&apos;4760 S Polaris Ave&apos;,
+             &apos;E Cheyenne Ave&apos;,
+             &apos;E Sahara Ave&apos;,
+             &apos;East Tropicana Ave&apos;,
+             &apos;S Eastern Ave&apos;,
+             &apos;S. Eastern Ave&apos;,
+             &apos;W Cactus Ave&apos;,
+             &apos;W Sahara Ave&apos;,
+             &apos;W Twain Ave&apos;,
+             &apos;W Washington Ave&apos;,
+             &apos;W. Sahara Ave&apos;]),
+ &apos;Ave.&apos;: set([&apos;200 Hoover Ave.&apos;,
+              &apos;6601 W. Twain Ave.&apos;,
+              &apos;East Twain Ave.&apos;,
+              &apos;Glendale Ave.&apos;,
+              &apos;Hoover Ave.&apos;,
+              &apos;W. Arby Ave.&apos;,
+              &apos;West Sahara Ave.&apos;]),
+ &apos;B&apos;: set([&apos;Avenue B&apos;, &apos;West Sahara Avenue #B&apos;]),
+ &apos;B12&apos;: set([&apos;W Sahara Ave #B12&apos;]),
+ &apos;Blvd&apos;: set([&apos;Adams Blvd&apos;,
+              &apos;Buchanan Blvd&apos;,
+              &apos;Carmen Blvd&apos;,
+              &apos;S Casino Center Blvd&apos;,
+              &apos;S Rainbow Blvd&apos;,
+              &apos;S Valley View Blvd&apos;,
+              &apos;Thomas Ryan Blvd&apos;,
+              &apos;W Charleston Blvd&apos;]),
+ &apos;Blvd.&apos;: set([&apos;E. Flamingo Blvd.&apos;,
+               &apos;N. Las Vegas Blvd.&apos;,
+               &apos;S Rainbow Blvd.&apos;,
+               &apos;West Lake Mead Blvd.&apos;]),
+ &apos;Bonneville&apos;: set([&apos;Bonneville&apos;]),
+ &apos;Boulevard&apos;: set([&apos;Adams Boulevard&apos;,
+                   &apos;Centennial Center Boulevard&apos;,
+                   &apos;Decatur Boulevard&apos;,
+                   &apos;Del Webb Boulevard&apos;,
+                   &apos;E. Charleston Boulevard&apos;,
+                   &apos;East Charleston Boulevard&apos;,
+                   &apos;East Lake Mead Boulevard&apos;,
+                   &apos;East Silverado Ranch Boulevard&apos;,
+                   &apos;Lamb Boulevard&apos;,
+                   &apos;Las Vegas Boulevard&apos;,
+                   &apos;Montelago Boulevard&apos;,
+                   &apos;N Casino Center Boulevard&apos;,
+                   &apos;North Arroyo Grande Boulevard&apos;,
+                   &apos;North Decatur Boulevard&apos;,
+                   &apos;North Jones Boulevard&apos;,
+                   &apos;North Lamb Boulevard&apos;,
+                   &apos;North Las Vegas Boulevard&apos;,
+                   &apos;North Nellis Boulevard&apos;,
+                   &apos;North Rainbow Boulevard&apos;,
+                   &apos;North Rampart Boulevard&apos;,
+                   &apos;Nu Wav Kaiv Boulevard&apos;,
+                   &apos;Rainbow Boulevard&apos;,
+                   &apos;S Las Vegas Boulevard&apos;,
+                   &apos;South Casino Center Boulevard&apos;,
+                   &apos;South Decatur Boulevard&apos;,
+                   &apos;South Hollywood Boulevard&apos;,
+                   &apos;South Jones Boulevard&apos;,
+                   &apos;South Las Vegas Boulevard&apos;,
+                   &apos;South Martin L King Boulevard&apos;,
+                   &apos;South Moapa Valley Boulevard&apos;,
+                   &apos;South Nellis Boulevard&apos;,
+                   &apos;South Rainbow Boulevard&apos;,
+                   &apos;South Rampart Boulevard&apos;,
+                   &apos;South Valley View Boulevard&apos;,
+                   &apos;Sun City Boulevard&apos;,
+                   &apos;Valley View Boulevard&apos;,
+                   &apos;Wayne Newton Boulevard&apos;,
+                   &apos;West Charleston Boulevard&apos;,
+                   &apos;West Lake Mead Boulevard&apos;,
+                   &apos;West Oakey Boulevard&apos;]),
+ &apos;Buckskin&apos;: set([&apos;W Buckskin&apos;]),
+ &apos;Canto&apos;: set([&apos;Via Bel Canto&apos;]),
+ &apos;Charleston&apos;: set([&apos;W Charleston&apos;]),
+ &apos;Cir&apos;: set([&apos;Sego Glen Cir&apos;]),
+ &apos;Circle&apos;: set([&apos;Citadel Circle&apos;,
+                &apos;Inner Circle&apos;,
+                &apos;Mall Ring Circle&apos;,
+                &apos;Village Center Circle&apos;]),
+ &apos;Dr&apos;: set([&apos;Club House Dr&apos;,
+            &apos;Corporate Park Dr&apos;,
+            &apos;S Highland Dr&apos;,
+            &apos;Village Walk Dr&apos;]),
+ &apos;East&apos;: set([&apos;Town Square East&apos;]),
+ &apos;Experience&apos;: set([&apos;Fremont Street Experience&apos;]),
+ &apos;G&apos;: set([&apos;Avenue G&apos;]),
+ &apos;Highway&apos;: set([&apos;Boulder Highway&apos;,
+                 &apos;Nevada Highway&apos;,
+                 &apos;North Boulder Highway&apos;,
+                 &apos;South Boulder Highway&apos;,
+                 &apos;Valley of Fire Highway&apos;]),
+ &apos;Lavender&apos;: set([&apos;W Lavender&apos;]),
+ &apos;Ln&apos;: set([&apos;Linda Ln&apos;]),
+ &apos;Ln.&apos;: set([&apos;Norman Rockwell Ln.&apos;]),
+ &apos;M2&apos;: set([&apos;W Craig Rd #M2&apos;]),
+ &apos;Mt.&apos;: set([&apos;Spring Mt.&apos;]),
+ &apos;North&apos;: set([&apos;Las Vegas Boulevard North&apos;]),
+ &apos;Pkwy&apos;: set([&apos;3547 S Maryland Pkwy&apos;, &apos;Grand Central Pkwy&apos;]),
+ &apos;Prado&apos;: set([&apos;Paseo del Prado&apos;]),
+ &apos;Rd&apos;: set([&apos;2560 E Sunset Rd&apos;,
+            &apos;El Camino Rd&apos;,
+            &apos;Hillpointe Rd&apos;,
+            &apos;Losee Rd&apos;,
+            &apos;Paradise Rd&apos;,
+            &apos;S Fort Apache Rd&apos;,
+            &apos;S Pecos Rd&apos;,
+            &apos;W Craig Rd&apos;,
+            &apos;W Warm Springs Rd&apos;]),
+ &apos;Rd.&apos;: set([&apos;E Sunset Rd.&apos;]),
+ &apos;Rd5&apos;: set([&apos;Airport Rd5&apos;]),
+ &apos;S&apos;: set([&apos;Las Vegas Blvd S&apos;,
+           &apos;Las Vegas Boulevard S&apos;,
+           &apos;Silverado Ranch Boulevard;Las Vegas Boulevard S&apos;]),
+ &apos;S.&apos;: set([&apos;Las Vegas Boulevard S.&apos;]),
+ &apos;Sahara&apos;: set([&apos;W Sahara&apos;]),
+ &apos;South&apos;: set([&apos;Las Vegas Blvd South&apos;,
+               &apos;Las Vegas Boulevard South&apos;,
+               &apos;Market Place South&apos;]),
+ &apos;St&apos;: set([&apos;Fremont St&apos;, &apos;Marco St&apos;, &apos;S 3rd St&apos;, &apos;S Main St&apos;]),
+ &apos;St.&apos;: set([&apos;5070 Arville St.&apos;]),
+ &apos;Vegas&apos;: set([&apos;Wynn Las Vegas&apos;]),
+ &apos;Way&apos;: set([&apos;6823 W. Ponderosa Way&apos;,
+             &apos;Brandywine Way&apos;,
+             &apos;Conestoga Way&apos;,
+             &apos;Crystal Water Way&apos;,
+             &apos;Donovan Way&apos;,
+             &apos;Nevada Way&apos;,
+             &apos;North Tenaya Way&apos;,
+             &apos;SLS Way&apos;,
+             &apos;Westminster Way&apos;,
+             &apos;Wiesner Way&apos;]),
+ &apos;apache&apos;: set([&apos;South Fort apache&apos;]),
+ &apos;ave&apos;: set([&apos;W Sahara ave&apos;]),
+ &apos;blvd&apos;: set([&apos;N Rainbow blvd&apos;,
+              &apos;S Las Vegas blvd&apos;,
+              &apos;W Charleston blvd&apos;,
+              &apos;W Lake Mead blvd&apos;]),
+ &apos;blvd.&apos;: set([&apos;S Las Vegas blvd.&apos;]),
+ &apos;ln&apos;: set([&apos;Rockwell ln&apos;])}
+</code></pre><p>根据以上结果，修复街道名称缩写的问题</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#创建修正街道名称的字典</span></div><div class="line">mapping = &#123; <span class="string">"Ct"</span>: <span class="string">"Court"</span>,</div><div class="line">            <span class="string">"St"</span>: <span class="string">"Street"</span>,</div><div class="line">            <span class="string">"st"</span>: <span class="string">"Street"</span>,</div><div class="line">            <span class="string">"St."</span>: <span class="string">"Street"</span>,</div><div class="line">            <span class="string">"St,"</span>: <span class="string">"Street"</span>,</div><div class="line">            <span class="string">"ST"</span>: <span class="string">"Street"</span>,</div><div class="line">            <span class="string">"street"</span>: <span class="string">"Street"</span>,</div><div class="line">            <span class="string">"Street."</span>: <span class="string">"Street"</span>,</div><div class="line">            <span class="string">"Ave"</span>: <span class="string">"Avenue"</span>,</div><div class="line">            <span class="string">"Ave."</span>: <span class="string">"Avenue"</span>,</div><div class="line">            <span class="string">"ave"</span>: <span class="string">"Avenue"</span>,</div><div class="line">           <span class="string">"AVE"</span>:<span class="string">"Avenue"</span>,</div><div class="line">            <span class="string">"Rd."</span>: <span class="string">"Road"</span>,   </div><div class="line">            <span class="string">"rd."</span>: <span class="string">"Road"</span>,</div><div class="line">            <span class="string">"Rd"</span>: <span class="string">"Road"</span>,    </div><div class="line">            <span class="string">"Hwy"</span>: <span class="string">"Highway"</span>,</div><div class="line">            <span class="string">"HIghway"</span>: <span class="string">"Highway"</span>,</div><div class="line">            <span class="string">"Pkwy"</span>: <span class="string">"Parkway"</span>,</div><div class="line">            <span class="string">"Pl"</span>: <span class="string">"Place"</span>,      </div><div class="line">            <span class="string">"place"</span>: <span class="string">"Place"</span>,</div><div class="line">            <span class="string">"Sedgwick"</span>: <span class="string">"Sedgwick Street"</span>,</div><div class="line">            <span class="string">"Sq."</span>: <span class="string">"Square"</span>,</div><div class="line">            <span class="string">"Newbury"</span>: <span class="string">"Newbury Street"</span>,</div><div class="line">           <span class="string">"Cir"</span>:<span class="string">"Circle"</span>,</div><div class="line">           <span class="string">"S Maryland Parkway Suite A-5-262"</span>:<span class="string">"S Maryland Parkway"</span>,</div><div class="line">           <span class="string">"Spanish Ridge Ave., Suite 1"</span>:<span class="string">"Spanish Ridge Avenue"</span>,</div><div class="line">           <span class="string">"S Eastern Ave #100"</span>:<span class="string">"S Eastern Avenue"</span>,</div><div class="line">           <span class="string">"South Pecos Road Suite 103"</span>:<span class="string">"South Pecos Road"</span>,</div><div class="line">           <span class="string">"Chandler Ave #11"</span>:<span class="string">"Chandler Ave"</span>,</div><div class="line">           &#125;</div><div class="line"></div><div class="line"><span class="comment"># 更正街道名称</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">update_name</span><span class="params">(name, mapping)</span>:</span>    </div><div class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> mapping:</div><div class="line">        <span class="keyword">if</span> key <span class="keyword">in</span> name:</div><div class="line">            name = string.replace(name,key,mapping[key])</div><div class="line">    <span class="keyword">return</span> name</div><div class="line">    </div><div class="line"></div><div class="line"><span class="keyword">for</span> street_type, ways <span class="keyword">in</span> sort_street_types.iteritems():</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> ways:</div><div class="line">        update_name(name, mapping)</div></pre></td></tr></table></figure>
+<h3 id="2、不正确的邮政编码"><a href="#2、不正确的邮政编码" class="headerlink" title="2、不正确的邮政编码"></a>2、不正确的邮政编码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">audit_zipcode</span><span class="params">(invalid_zipcodes, zipcode)</span>:</span></div><div class="line">    threeDigits = zipcode[<span class="number">0</span>:<span class="number">3</span>]</div><div class="line">    </div><div class="line">    <span class="keyword">if</span> len(zipcode) != <span class="number">6</span>:                            </div><div class="line">        invalid_zipcodes[threeDigits].add(zipcode)    </div><div class="line">    <span class="keyword">elif</span> <span class="keyword">not</span> threeDigits.isdigit():                    </div><div class="line">        invalid_zipcodes[threeDigits].add(zipcode)</div><div class="line">    </div><div class="line">    <span class="keyword">elif</span> threeDigits != <span class="string">'891'</span>:                       </div><div class="line">        invalid_zipcodes[threeDigits].add(zipcode)</div><div class="line">        </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">is_zipcode</span><span class="params">(elem)</span>:</span></div><div class="line">    <span class="keyword">return</span> (elem.attrib[<span class="string">'k'</span>] == <span class="string">"addr:postcode"</span>)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">audit_zip</span><span class="params">(osmfile)</span>:</span></div><div class="line">    osm_file = open(osmfile, <span class="string">"r"</span>)</div><div class="line">    invalid_zipcodes = defaultdict(set)</div><div class="line">    <span class="keyword">for</span> event, elem <span class="keyword">in</span> ET.iterparse(osm_file, events=(<span class="string">"start"</span>,)):</div><div class="line"></div><div class="line">        <span class="keyword">if</span> elem.tag == <span class="string">"node"</span> <span class="keyword">or</span> elem.tag == <span class="string">"way"</span>:</div><div class="line">            <span class="keyword">for</span> tag <span class="keyword">in</span> elem.iter(<span class="string">"tag"</span>):</div><div class="line">                <span class="keyword">if</span> is_zipcode(tag):</div><div class="line">                    audit_zipcode(invalid_zipcodes,tag.attrib[<span class="string">'v'</span>])</div><div class="line">    <span class="keyword">return</span> invalid_zipcodes</div><div class="line"></div><div class="line">sort_zipcode = audit_zip(file_name)</div><div class="line">pprint.pprint(dict(sort_zipcode))</div></pre></td></tr></table></figure>
+<pre><code>{&apos;645&apos;: set([&apos;6451112&apos;]),
+ &apos;890&apos;: set([&apos;89002&apos;,
+             &apos;89005&apos;,
+             &apos;89011&apos;,
+             &apos;89012&apos;,
+             &apos;89014&apos;,
+             &apos;89014-2132&apos;,
+             &apos;89015&apos;,
+             &apos;89019&apos;,
+             &apos;89025&apos;,
+             &apos;89030&apos;,
+             &apos;89031&apos;,
+             &apos;89040&apos;,
+             &apos;89044&apos;,
+             &apos;89052&apos;,
+             &apos;89070&apos;,
+             &apos;89074&apos;,
+             &apos;89081&apos;,
+             &apos;89086&apos;]),
+ &apos;891&apos;: set([&apos;89101&apos;,
+             &apos;89102&apos;,
+             &apos;89102-4370&apos;,
+             &apos;89103&apos;,
+             &apos;89104&apos;,
+             &apos;89104-1307&apos;,
+             &apos;89105&apos;,
+             &apos;89106&apos;,
+             &apos;89107&apos;,
+             &apos;89108&apos;,
+             &apos;89108-7049&apos;,
+             &apos;89109&apos;,
+             &apos;89109-1907&apos;,
+             &apos;89110&apos;,
+             &apos;89113&apos;,
+             &apos;89115&apos;,
+             &apos;89117&apos;,
+             &apos;89118&apos;,
+             &apos;89119&apos;,
+             &apos;89119-1001&apos;,
+             &apos;89119-6304&apos;,
+             &apos;89120&apos;,
+             &apos;89121&apos;,
+             &apos;89122&apos;,
+             &apos;89123&apos;,
+             &apos;89128&apos;,
+             &apos;89128-6634&apos;,
+             &apos;89129&apos;,
+             &apos;89129-7260&apos;,
+             &apos;89130&apos;,
+             &apos;89131&apos;,
+             &apos;89134&apos;,
+             &apos;89135&apos;,
+             &apos;89135-1020&apos;,
+             &apos;89135-1038&apos;,
+             &apos;89139&apos;,
+             &apos;89142&apos;,
+             &apos;89144&apos;,
+             &apos;89145&apos;,
+             &apos;89146&apos;,
+             &apos;89146-2977&apos;,
+             &apos;89147&apos;,
+             &apos;89147-4111&apos;,
+             &apos;89147-8491&apos;,
+             &apos;89148&apos;,
+             &apos;89149&apos;,
+             &apos;89154&apos;,
+             &apos;89156&apos;,
+             &apos;89161&apos;,
+             &apos;89166&apos;,
+             &apos;89169&apos;,
+             &apos;89178&apos;,
+             &apos;89179&apos;,
+             &apos;89183&apos;,
+             &apos;89191&apos;]),
+ &apos;892&apos;: set([&apos;8929&apos;]),
+ &apos;NV &apos;: set([&apos;NV 89014&apos;,
+             &apos;NV 89030&apos;,
+             &apos;NV 89031&apos;,
+             &apos;NV 89052&apos;,
+             &apos;NV 89101&apos;,
+             &apos;NV 89107&apos;,
+             &apos;NV 89109&apos;,
+             &apos;NV 89117&apos;,
+             &apos;NV 89119&apos;,
+             &apos;NV 89123&apos;,
+             &apos;NV 89124&apos;,
+             &apos;NV 89129&apos;,
+             &apos;NV 89134&apos;,
+             &apos;NV 89135&apos;,
+             &apos;NV 89142&apos;,
+             &apos;NV 89191&apos;]),
+ &apos;Nev&apos;: set([&apos;Nevada 89113&apos;])}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">update_zip</span><span class="params">(zipcode)</span>:</span></div><div class="line">    <span class="keyword">if</span> zipcode[<span class="number">0</span>:<span class="number">3</span>] == <span class="string">'NV '</span>:</div><div class="line">        zipcode = zipcode[<span class="number">3</span>:]</div><div class="line">        <span class="keyword">return</span> zipcode</div><div class="line">    <span class="keyword">elif</span> zipcode[<span class="number">0</span>:<span class="number">6</span>] == <span class="string">'Nevada'</span>:</div><div class="line">        zipcode = zipcode[<span class="number">7</span>:]</div><div class="line">        <span class="keyword">return</span> zipcode</div><div class="line">    <span class="keyword">elif</span> zipcode[<span class="number">0</span>:<span class="number">3</span>] != <span class="string">'891'</span>:</div><div class="line">        zipcode = <span class="string">'None'</span></div><div class="line">        <span class="keyword">return</span> zipcode</div><div class="line">    <span class="keyword">elif</span> zipcode[<span class="number">0</span>:<span class="number">3</span>] == <span class="string">'891'</span> <span class="keyword">and</span> len(zipcode) &gt;<span class="number">6</span>:</div><div class="line">         zipcode = zipcode[<span class="number">0</span>:<span class="number">5</span>]</div><div class="line">         <span class="keyword">return</span> zipcode</div><div class="line"> </div><div class="line"><span class="keyword">for</span> street_type, ways <span class="keyword">in</span> sort_zipcode.iteritems():</div><div class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> ways:</div><div class="line">        <span class="keyword">if</span> update_zip(name):</div><div class="line">            update_zip(name)</div></pre></td></tr></table></figure>
+<p>接下来，我们将清理文件并分隔数据;</p>
+<p>tags_clean 函数用来设置id,key,value和type的值，在把街道名称和邮编的更改添加到字典时使用；</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div><div class="line">150</div><div class="line">151</div><div class="line">152</div><div class="line">153</div><div class="line">154</div><div class="line">155</div><div class="line">156</div><div class="line">157</div><div class="line">158</div><div class="line">159</div><div class="line">160</div><div class="line">161</div><div class="line">162</div><div class="line">163</div><div class="line">164</div><div class="line">165</div><div class="line">166</div><div class="line">167</div><div class="line">168</div><div class="line">169</div><div class="line">170</div><div class="line">171</div><div class="line">172</div><div class="line">173</div><div class="line">174</div><div class="line">175</div><div class="line">176</div><div class="line">177</div><div class="line">178</div><div class="line">179</div><div class="line">180</div><div class="line">181</div><div class="line">182</div><div class="line">183</div><div class="line">184</div><div class="line">185</div><div class="line">186</div><div class="line">187</div><div class="line">188</div><div class="line">189</div><div class="line">190</div><div class="line">191</div><div class="line">192</div><div class="line">193</div><div class="line">194</div></pre></td><td class="code"><pre><div class="line">OSM_PATH = file_name</div><div class="line"></div><div class="line">NODES_PATH = <span class="string">"nodes.csv"</span></div><div class="line">NODE_TAGS_PATH = <span class="string">"nodes_tags.csv"</span></div><div class="line">WAYS_PATH = <span class="string">"ways.csv"</span></div><div class="line">WAY_NODES_PATH = <span class="string">"ways_nodes.csv"</span></div><div class="line">WAY_TAGS_PATH = <span class="string">"ways_tags.csv"</span></div><div class="line"></div><div class="line">NODE_FIELDS = [<span class="string">'id'</span>, <span class="string">'lat'</span>, <span class="string">'lon'</span>, <span class="string">'user'</span>, <span class="string">'uid'</span>, <span class="string">'version'</span>, <span class="string">'changeset'</span>, <span class="string">'timestamp'</span>]</div><div class="line">NODE_TAGS_FIELDS = [<span class="string">'id'</span>, <span class="string">'key'</span>, <span class="string">'value'</span>, <span class="string">'type'</span>]</div><div class="line">WAY_FIELDS = [<span class="string">'id'</span>, <span class="string">'user'</span>, <span class="string">'uid'</span>, <span class="string">'version'</span>, <span class="string">'changeset'</span>, <span class="string">'timestamp'</span>]</div><div class="line">WAY_TAGS_FIELDS = [<span class="string">'id'</span>, <span class="string">'key'</span>, <span class="string">'value'</span>, <span class="string">'type'</span>]</div><div class="line">WAY_NODES_FIELDS = [<span class="string">'id'</span>, <span class="string">'node_id'</span>, <span class="string">'position'</span>]</div><div class="line"></div><div class="line">SCHEMA = schema.Schema</div><div class="line">LOWER_COLON = re.compile(<span class="string">r'^([a-z]|_)+:([a-z]|_)+'</span>)</div><div class="line">PROBLEMCHARS = re.compile(<span class="string">r'[=\+/&amp;&lt;&gt;;\'"\?%#$@\,\. \t\r\n]'</span>)</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">tags_clean</span><span class="params">(id , tag )</span>:</span></div><div class="line">    node_tagss = &#123;&#125;</div><div class="line">    node_tagss[<span class="string">'id'</span>] = int(id)</div><div class="line">    <span class="keyword">if</span> tag.attrib[<span class="string">'k'</span>] == <span class="string">"addr:street"</span>:</div><div class="line">        node_tagss[<span class="string">'value'</span>] = update_name(tag.attrib[<span class="string">'v'</span>], mapping)</div><div class="line">    <span class="keyword">elif</span> tag.attrib[<span class="string">'k'</span>] == <span class="string">"addr:postcode"</span>:</div><div class="line">        node_tagss[<span class="string">'value'</span>] = update_zip(tag.attrib[<span class="string">'v'</span>])</div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        node_tagss[<span class="string">'value'</span>] = tag.attrib[<span class="string">'v'</span>]</div><div class="line"></div><div class="line">    <span class="keyword">if</span> <span class="string">":"</span> <span class="keyword">not</span> <span class="keyword">in</span> tag.attrib[<span class="string">'k'</span>]:</div><div class="line">        node_tagss[<span class="string">'key'</span>] = tag.attrib[<span class="string">'k'</span>]</div><div class="line">        node_tagss[<span class="string">'type'</span>] = <span class="string">'regular'</span></div><div class="line">        </div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        pcolon = tag.attrib[<span class="string">'k'</span>].index(<span class="string">":"</span>) + <span class="number">1</span></div><div class="line">        node_tagss[<span class="string">'key'</span>] = tag.attrib[<span class="string">'k'</span>][pcolon:]</div><div class="line">        node_tagss[<span class="string">'type'</span>] = tag.attrib[<span class="string">'k'</span>][:pcolon - <span class="number">1</span>]</div><div class="line">        </div><div class="line">    </div><div class="line">    <span class="keyword">return</span> node_tagss</div><div class="line">    </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">shape_element</span><span class="params">(element, node_attr_fields=NODE_FIELDS, way_attr_fields=WAY_FIELDS,</span></span></div><div class="line">                  problem_chars=PROBLEMCHARS, default_tag_type=<span class="string">'regular'</span>):</div><div class="line">    <span class="string">"""Clean and shape node or way XML element to Python dict"""</span></div><div class="line"></div><div class="line">    node_attribs = &#123;&#125;</div><div class="line">    way_attribs = &#123;&#125;</div><div class="line">    way_nodes = []</div><div class="line">    tags = []  <span class="comment"># Handle secondary tags the same way for both node and way elements</span></div><div class="line">    node_tagss = &#123;&#125;</div><div class="line">    <span class="comment"># YOUR CODE HERE</span></div><div class="line">    <span class="keyword">if</span> element.tag == <span class="string">'node'</span>:</div><div class="line">        <span class="keyword">for</span> node <span class="keyword">in</span> NODE_FIELDS:</div><div class="line">            node_attribs[node] = element.attrib[node]</div><div class="line">        node_attribs[<span class="string">'id'</span>]= int(node_attribs[<span class="string">'id'</span>])</div><div class="line">        node_attribs[<span class="string">'uid'</span>]= int(node_attribs[<span class="string">'uid'</span>])</div><div class="line">        node_attribs[<span class="string">'changeset'</span>]= int(node_attribs[<span class="string">'changeset'</span>])</div><div class="line">        </div><div class="line">        node_attribs[<span class="string">'lon'</span>]= float(node_attribs[<span class="string">'lon'</span>])</div><div class="line">        node_attribs[<span class="string">'lat'</span>]= float(node_attribs[<span class="string">'lat'</span>])</div><div class="line">  </div><div class="line">        <span class="keyword">for</span> tag <span class="keyword">in</span> element.iter(<span class="string">"tag"</span>):</div><div class="line">            tag_clean =&#123;&#125;</div><div class="line">            <span class="keyword">if</span> PROBLEMCHARS.search(tag.attrib[<span class="string">'k'</span>]) == <span class="keyword">None</span>:</div><div class="line">                node_tagss = tags_clean(node_attribs[<span class="string">'id'</span>] , tag )</div><div class="line">                tags.append(node_tagss)</div><div class="line">        </div><div class="line">            <span class="comment">#tag_clean = clean(tag)</span></div><div class="line">            <span class="comment">#if tag_clean:</span></div><div class="line">            <span class="comment">#    tags.append(tag_clean)</span></div><div class="line">        <span class="keyword">if</span> node_attribs:</div><div class="line">            <span class="keyword">return</span> &#123;<span class="string">'node'</span>: node_attribs, <span class="string">'node_tags'</span>: tags&#125;</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">    </div><div class="line">    <span class="keyword">elif</span> element.tag == <span class="string">'way'</span>:</div><div class="line">        <span class="keyword">for</span> way <span class="keyword">in</span> WAY_FIELDS:</div><div class="line">            way_attribs[way] = element.attrib[way]</div><div class="line">        </div><div class="line">        way_attribs[<span class="string">'id'</span>]= int(way_attribs[<span class="string">'id'</span>])</div><div class="line">        way_attribs[<span class="string">'uid'</span>]= int(way_attribs[<span class="string">'uid'</span>])</div><div class="line">        way_attribs[<span class="string">'changeset'</span>]= int(way_attribs[<span class="string">'changeset'</span>])</div><div class="line">        <span class="keyword">for</span> tag <span class="keyword">in</span> element.iter(<span class="string">"tag"</span>):</div><div class="line">            tag_clean =&#123;&#125;</div><div class="line">            <span class="keyword">if</span> PROBLEMCHARS.search(tag.attrib[<span class="string">'k'</span>]) == <span class="keyword">None</span>:</div><div class="line">                node_tagss = tags_clean(way_attribs[<span class="string">'id'</span>] , tag )</div><div class="line">                tags.append(node_tagss)</div><div class="line">        </div><div class="line">            <span class="comment">#tag_clean = clean(tag)</span></div><div class="line">            <span class="comment">#if tag_clean:</span></div><div class="line">            <span class="comment">#    tags.append(tag_clean)</span></div><div class="line">                </div><div class="line">        count =<span class="number">0</span></div><div class="line">        <span class="keyword">for</span> nodes <span class="keyword">in</span> element.iter(<span class="string">"nd"</span>):</div><div class="line">            wnd = &#123;&#125;</div><div class="line">            wnd[<span class="string">'id'</span>] = int(way_attribs[<span class="string">'id'</span>])</div><div class="line">            wnd[<span class="string">'node_id'</span>] = int(nodes.attrib[<span class="string">'ref'</span>])</div><div class="line">            wnd[<span class="string">'position'</span>] = count</div><div class="line">            count += <span class="number">1</span></div><div class="line">            </div><div class="line">            way_nodes.append(wnd)</div><div class="line">            </div><div class="line">        <span class="keyword">if</span> way_attribs:</div><div class="line">            <span class="keyword">return</span> &#123;<span class="string">'way'</span>: way_attribs, <span class="string">'way_nodes'</span>: way_nodes, <span class="string">'way_tags'</span>: tags&#125;</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">None</span></div><div class="line">            </div><div class="line"></div><div class="line"><span class="comment"># ================================================== #</span></div><div class="line"><span class="comment">#               Helper Functions                     #</span></div><div class="line"><span class="comment"># ================================================== #</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_element</span><span class="params">(osm_file, tags=<span class="params">(<span class="string">'node'</span>, <span class="string">'way'</span>, <span class="string">'relation'</span>)</span>)</span>:</span></div><div class="line">    <span class="string">"""Yield element if it is the right type of tag"""</span></div><div class="line"></div><div class="line">    context = ET.iterparse(osm_file, events=(<span class="string">'start'</span>, <span class="string">'end'</span>))</div><div class="line">    _, root = next(context)</div><div class="line">    <span class="keyword">for</span> event, elem <span class="keyword">in</span> context:</div><div class="line">        <span class="keyword">if</span> event == <span class="string">'end'</span> <span class="keyword">and</span> elem.tag <span class="keyword">in</span> tags:</div><div class="line">            <span class="keyword">yield</span> elem</div><div class="line">            root.clear()</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">validate_element</span><span class="params">(element, validator, schema=SCHEMA)</span>:</span></div><div class="line">    <span class="string">"""Raise ValidationError if element does not match schema"""</span></div><div class="line">    <span class="keyword">if</span> validator.validate(element, schema) <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">True</span>:</div><div class="line">        field, errors = next(validator.errors.iteritems())</div><div class="line">        message_string = <span class="string">"\nElement of type '&#123;0&#125;' has the following errors:\n&#123;1&#125;"</span></div><div class="line">        error_strings = (</div><div class="line">            <span class="string">"&#123;0&#125;: &#123;1&#125;"</span>.format(k, v <span class="keyword">if</span> isinstance(v, str) <span class="keyword">else</span> <span class="string">", "</span>.join(v))</div><div class="line">            <span class="keyword">for</span> k, v <span class="keyword">in</span> errors.iteritems()</div><div class="line">        )</div><div class="line">        <span class="keyword">raise</span> cerberus.ValidationError(</div><div class="line">            message_string.format(field, <span class="string">"\n"</span>.join(error_strings))</div><div class="line">        )</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnicodeDictWriter</span><span class="params">(csv.DictWriter, object)</span>:</span></div><div class="line">    <span class="string">"""Extend csv.DictWriter to handle Unicode input"""</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">writerow</span><span class="params">(self, row)</span>:</span></div><div class="line">        super(UnicodeDictWriter, self).writerow(&#123;</div><div class="line">            k: (v.encode(<span class="string">'utf-8'</span>) <span class="keyword">if</span> isinstance(v, unicode) <span class="keyword">else</span> v) <span class="keyword">for</span> k, v <span class="keyword">in</span> row.iteritems()</div><div class="line">        &#125;)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">writerows</span><span class="params">(self, rows)</span>:</span></div><div class="line">        <span class="keyword">for</span> row <span class="keyword">in</span> rows:</div><div class="line">            self.writerow(row)</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># ================================================== #</span></div><div class="line"><span class="comment">#               Main Function                        #</span></div><div class="line"><span class="comment"># ================================================== #</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_map</span><span class="params">(file_in, validate)</span>:</span></div><div class="line">    <span class="string">"""Iteratively process each XML element and write to csv(s)"""</span></div><div class="line"></div><div class="line">    <span class="keyword">with</span> codecs.open(NODES_PATH, <span class="string">'w'</span>) <span class="keyword">as</span> nodes_file, \</div><div class="line">         codecs.open(NODE_TAGS_PATH, <span class="string">'w'</span>) <span class="keyword">as</span> nodes_tags_file, \</div><div class="line">         codecs.open(WAYS_PATH, <span class="string">'w'</span>) <span class="keyword">as</span> ways_file, \</div><div class="line">         codecs.open(WAY_NODES_PATH, <span class="string">'w'</span>) <span class="keyword">as</span> way_nodes_file, \</div><div class="line">         codecs.open(WAY_TAGS_PATH, <span class="string">'w'</span>) <span class="keyword">as</span> way_tags_file:</div><div class="line"></div><div class="line">        nodes_writer = UnicodeDictWriter(nodes_file, NODE_FIELDS)</div><div class="line">        node_tags_writer = UnicodeDictWriter(nodes_tags_file, NODE_TAGS_FIELDS)</div><div class="line">        ways_writer = UnicodeDictWriter(ways_file, WAY_FIELDS)</div><div class="line">        way_nodes_writer = UnicodeDictWriter(way_nodes_file, WAY_NODES_FIELDS)</div><div class="line">        way_tags_writer = UnicodeDictWriter(way_tags_file, WAY_TAGS_FIELDS)</div><div class="line"></div><div class="line">        nodes_writer.writeheader()</div><div class="line">        node_tags_writer.writeheader()</div><div class="line">        ways_writer.writeheader()</div><div class="line">        way_nodes_writer.writeheader()</div><div class="line">        way_tags_writer.writeheader()</div><div class="line"></div><div class="line">        validator = cerberus.Validator()</div><div class="line"></div><div class="line">        <span class="keyword">for</span> element <span class="keyword">in</span> get_element(file_in, tags=(<span class="string">'node'</span>, <span class="string">'way'</span>)):</div><div class="line">            el = shape_element(element)</div><div class="line">            <span class="keyword">if</span> el:</div><div class="line">                <span class="keyword">if</span> validate <span class="keyword">is</span> <span class="keyword">True</span>:</div><div class="line">                    validate_element(el, validator)</div><div class="line">                <span class="keyword">if</span> element.tag == <span class="string">'node'</span>:</div><div class="line">                    nodes_writer.writerow(el[<span class="string">'node'</span>])</div><div class="line">                    node_tags_writer.writerows(el[<span class="string">'node_tags'</span>])</div><div class="line">                <span class="keyword">elif</span> element.tag == <span class="string">'way'</span>:</div><div class="line">                    ways_writer.writerow(el[<span class="string">'way'</span>])</div><div class="line">                    way_nodes_writer.writerows(el[<span class="string">'way_nodes'</span>])</div><div class="line">                    way_tags_writer.writerows(el[<span class="string">'way_tags'</span>])</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="comment"># Note: Validation is ~ 10X slower. For the project consider using a small</span></div><div class="line">    <span class="comment"># sample of the map when validating.</span></div><div class="line">    process_map(OSM_PATH, validate=<span class="keyword">False</span>)</div></pre></td></tr></table></figure>
+<p>创建las-vegas_nevada.db数据库，将各csv文件导入数据库中</p>
+<h2 id="二、探索数据"><a href="#二、探索数据" class="headerlink" title="二、探索数据"></a>二、探索数据</h2><p>以下部分是对拉斯维加斯数据集的探索</p>
+<h3 id="文件大小"><a href="#文件大小" class="headerlink" title="文件大小"></a>文件大小</h3><ul>
+<li>las-vegas_nevada.osm : 215 MB</li>
+<li>las-vegas_nevada.db :120MB</li>
+<li>nodes.csv : 84.2 MB</li>
+<li>nodes_tags.csv : 2.28 MB</li>
+<li>ways.csv : 6.46 MB</li>
+<li>ways_nodes.csv : 29.7 MB</li>
+<li>ways_tags.csv : 14.3 MB</li>
+</ul>
+<h3 id="node节点数量"><a href="#node节点数量" class="headerlink" title="node节点数量"></a>node节点数量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sqlite&gt; SELECT count(*)</div><div class="line">   ...&gt; FROM nodes;</div><div class="line"><span class="number">1048101</span></div></pre></td></tr></table></figure>
+<h3 id="道路数量"><a href="#道路数量" class="headerlink" title="道路数量"></a>道路数量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">sqlite&gt; SELECT count(*)</div><div class="line">   ...&gt; FROM ways;</div><div class="line"><span class="number">112116</span></div></pre></td></tr></table></figure>
+<h3 id="用户（去重）数量"><a href="#用户（去重）数量" class="headerlink" title="用户（去重）数量"></a>用户（去重）数量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">sqlite&gt; SELECT count(distinct(user.uid))</div><div class="line">   ...&gt; FROM (SELECT uid</div><div class="line">   ...&gt; FROM nodes</div><div class="line">   ...&gt; UNION all</div><div class="line">   ...&gt; SELECT uid</div><div class="line">   ...&gt; FROM ways ) user;</div><div class="line"><span class="number">1024</span></div></pre></td></tr></table></figure>
+<h3 id="前10名贡献用户"><a href="#前10名贡献用户" class="headerlink" title="前10名贡献用户"></a>前10名贡献用户</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">sqlite&gt; SELECT user.user ,count(*)</div><div class="line">   ...&gt; FROM ( SELECT user</div><div class="line">   ...&gt; FROM nodes</div><div class="line">   ...&gt; UNION all</div><div class="line">   ...&gt; SELECT user</div><div class="line">   ...&gt; FROM ways) user</div><div class="line">   ...&gt; GROUP BY user.user</div><div class="line">   ...&gt; ORDER BY count(*)</div><div class="line">   ...&gt; DESC</div><div class="line">   ...&gt; LIMIT <span class="number">10</span> ;</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">alimamo|<span class="number">251497</span></div><div class="line">tomthepom|<span class="number">121172</span></div><div class="line">woodpeck_fixbot|<span class="number">70826</span></div><div class="line">alecdhuse|<span class="number">66528</span></div><div class="line">abellao|<span class="number">55639</span></div><div class="line">gMitchellD|<span class="number">44635</span></div><div class="line">robgeb|<span class="number">41070</span></div><div class="line">nmixter|<span class="number">40093</span></div><div class="line">TheDutchMan13|<span class="number">39304</span></div><div class="line">Tom_Holland|<span class="number">33379</span></div></pre></td></tr></table></figure>
+<h3 id="只提交过一次的用户数量"><a href="#只提交过一次的用户数量" class="headerlink" title="只提交过一次的用户数量"></a>只提交过一次的用户数量</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">sqlite&gt; SELECT count(*)</div><div class="line">   ...&gt; FROM</div><div class="line">   ...&gt; (SELECT e.user, count(*)</div><div class="line">   ...&gt; FROM ( SELECT user</div><div class="line">   ...&gt; FROM nodes</div><div class="line">   ...&gt; UNION all</div><div class="line">   ...&gt; SELECT user</div><div class="line">   ...&gt; FROM ways ) e</div><div class="line">   ...&gt; GROUP BY e.user</div><div class="line">   ...&gt; HAVING count(*)=<span class="number">1</span>) ;</div><div class="line"><span class="number">244</span></div></pre></td></tr></table></figure>
+<h2 id="三、其他数据探索"><a href="#三、其他数据探索" class="headerlink" title="三、其他数据探索"></a>三、其他数据探索</h2><h3 id="十大便利设施"><a href="#十大便利设施" class="headerlink" title="十大便利设施"></a>十大便利设施</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sqlite&gt; SELECT value, count(*)</div><div class="line">   ...&gt; FROM  nodes_tags</div><div class="line">   ...&gt; WHERE key =<span class="string">'amenity'</span></div><div class="line">   ...&gt; GROUP BY value</div><div class="line">   ...&gt; ORDER BY count(*) DESC</div><div class="line">   ...&gt; LIMIT <span class="number">10</span> ;</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">restaurant|<span class="number">460</span></div><div class="line">place_of_worship|<span class="number">294</span></div><div class="line">fuel|<span class="number">282</span></div><div class="line">fast_food|<span class="number">267</span></div><div class="line">fountain|<span class="number">266</span></div><div class="line">school|<span class="number">208</span></div><div class="line">shelter|<span class="number">122</span></div><div class="line">toilets|<span class="number">85</span></div><div class="line">cafe|<span class="number">78</span></div><div class="line">bar|<span class="number">72</span></div><div class="line"></div><div class="line">翻译成汉语：</div><div class="line">餐馆| <span class="number">460</span></div><div class="line">礼拜场所| <span class="number">294</span></div><div class="line">燃料| <span class="number">282</span></div><div class="line">快餐| <span class="number">267</span></div><div class="line">喷泉|<span class="number">266</span></div><div class="line">学校|<span class="number">208</span></div><div class="line">住所|<span class="number">122</span></div><div class="line">厕所|<span class="number">85</span></div><div class="line">网吧|<span class="number">78</span></div><div class="line">酒吧|<span class="number">72</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">果然在哪都是‘民以食为天’，餐馆第一，快餐第四；</div><div class="line">好奇心，究竟赌场等场所有多少？</div><div class="line">把上面的查询去掉限制前<span class="number">10</span>，发现有：</div><div class="line">casino|<span class="number">10</span></div><div class="line">nightclub|<span class="number">10</span></div><div class="line">theatre|<span class="number">10</span></div><div class="line">cinema|<span class="number">8</span></div><div class="line">stripclub|<span class="number">3</span></div><div class="line"></div><div class="line">即：</div><div class="line">赌场|<span class="number">10</span></div><div class="line">牙医|<span class="number">10</span></div><div class="line">夜总会|<span class="number">10</span></div><div class="line">影院|<span class="number">10</span></div><div class="line">电影|<span class="number">8</span></div><div class="line">脱衣舞俱乐部|<span class="number">3</span></div></pre></td></tr></table></figure>
+<h3 id="十大美食"><a href="#十大美食" class="headerlink" title="十大美食"></a>十大美食</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">sqlite&gt; SELECT nodes_tags.value, count(*)</div><div class="line">   ...&gt; FROM nodes_tags</div><div class="line">   ...&gt; JOIN (SELECT DISTINCT(id) </div><div class="line">   ...&gt; FROM nodes_tags</div><div class="line">   ...&gt; WHERE value= <span class="string">'restaurant'</span>) i</div><div class="line">   ...&gt; ON nodes_tags.id = i.id</div><div class="line">   ...&gt; WHERE nodes_tags.key = <span class="string">'cuisine'</span></div><div class="line">   ...&gt; GROUP BY nodes_tags.value</div><div class="line">   ...&gt; ORDER BY count(*) DESC</div><div class="line">   ...&gt; LIMIT <span class="number">10</span>;</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">mexican|<span class="number">41</span></div><div class="line">pizza|<span class="number">31</span></div><div class="line">american|<span class="number">20</span></div><div class="line">italian|<span class="number">16</span></div><div class="line">steak_house|<span class="number">16</span></div><div class="line">burger|<span class="number">14</span></div><div class="line">chinese|<span class="number">12</span></div><div class="line">japanese|<span class="number">9</span></div><div class="line">asian|<span class="number">8</span></div><div class="line">buffet|<span class="number">7</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">墨西哥餐厅、披萨、美国餐厅占前三，此处墨西哥餐厅偏多；</div></pre></td></tr></table></figure>
+<h2 id="四、关于数据集的其他想法"><a href="#四、关于数据集的其他想法" class="headerlink" title="四、关于数据集的其他想法"></a>四、关于数据集的其他想法</h2><p>改进或分析数据的额外建议，实施改进的益处及一些预期的问题。</p>
+<p> 1.</p>
+<ul>
+<li>建议：现在的地图数据是不完整的，看到很多用户只提交了一次，建议应该想办法增加用户的活跃度，使用用户激励手段，比如积分，贡献排行榜，游戏化任务，勋章，高贡献用户特权等；</li>
+<li>好处：增加数据量，丰富地图数据；</li>
+<li>问题：过程较为复杂，需要人员、资金充足；</li>
+</ul>
+<p> 2.</p>
+<ul>
+<li>建议：openstreetmap组织进行数据清洗和更新，可以官方组织工程师进行，也可以通过游戏化的方式发布由用户进行；</li>
+<li><p>好处：数据会较为干净，用户使用更加精确；地图相关工作者使用地图时可以不用或者少量进行数据清洗，使用更高效；</p>
+</li>
+<li><p>问题：需要资金，工程师团队，对于非盈利性组织来说，有很大难度；</p>
+</li>
+</ul>
+<p> 3.</p>
+<ul>
+<li>建议：贡献量较少的用户较容易提供不规范的信息，我们可以先从贡献度少的用户开始清理；</li>
+<li>好处：会提高数据的一致性和准确性；</li>
+<li>问题：降低新用户的积极性；</li>
+</ul>
+<p> 4.</p>
+<ul>
+<li>建议：数据的格式不统一，可以规范一下数据输入的格式；</li>
+<li>好处：可以提高数据的规范性；</li>
+<li>坏处：规则不够灵活，难以适应不同地区的情况；</li>
+</ul>
+<p> 5.</p>
+<ul>
+<li>建议：由于本数据并不全面，我们可以通过外部的API，比如高德地图、谷歌地图、PokemonGo等，完善和校准本地图中的数据；</li>
+<li>好处：可以填充信息，校准数据；</li>
+<li>问题：数据可能重复度大，或者数据格式不同导入困难等<br> 而且涉及商业合作，互为竞争对手，合作难度估计较大；</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/08/24/openstreetmap-study/" data-id="cj6qa92j30001pwvrvjmlmjhe" class="article-share-link">Partager</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2017/08/24/taitanik/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ancien</strong>
+      <div class="article-nav-title">泰坦尼克号数据探索</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Mot-clés</h3>
+    <div class="widget">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/A-B测试/">A/B测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python数据分析/">python数据分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/统计学/">统计学</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Nuage de mot-clés</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/A-B测试/" style="font-size: 10px;">A/B测试</a> <a href="/tags/python数据分析/" style="font-size: 10px;">python数据分析</a> <a href="/tags/统计学/" style="font-size: 20px;">统计学</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">August 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">June 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Articles récents</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/08/24/openstreetmap-study/">openstreetmap数据整理与研究</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/24/taitanik/">泰坦尼克号数据探索</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/24/tongji/">斯特鲁普效应调查</a>
+          </li>
+        
+          <li>
+            <a href="/2017/08/24/ABtest/">优达学城A/B测试项目</a>
+          </li>
+        
+          <li>
+            <a href="/2017/06/17/tongjixue/">数据分析师必备的统计学知识，都在这里了</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 肖彬<br>
+      Propulsé by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
